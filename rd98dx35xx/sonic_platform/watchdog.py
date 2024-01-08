@@ -9,6 +9,7 @@ import array
 
 from sonic_platform_base.watchdog_base import WatchdogBase
 from sonic_py_common import logger
+from . import utils
 
 """ ioctl constants """
 IO_READ = 0x80000000
@@ -31,7 +32,7 @@ WDIOS_DISABLECARD = 0x0001
 WDIOS_ENABLECARD = 0x0002
 
 """ watchdog sysfs """
-WD_SYSFS_PATH = "/sys/class/watchdog/"
+WD_SYSFS_PATH = "/sys/class/watchdog/watchdog0/"
 
 WD_COMMON_ERROR = -1
 
@@ -49,15 +50,28 @@ class WatchdogImplBase(WatchdogBase):
         Open a watchdog handle
         @param wd_device_path Path to watchdog device
         """
+        super(WatchdogImplBase, self).__init__()
 
         self.watchdog_path = wd_device_path
-        self.watchdog = os.open(self.watchdog_path, os.O_WRONLY)
-
-        # Opening a watchdog descriptor starts
-        # watchdog timer; by default it should be stopped
-        self._disablewatchdog()
-        self.armed = False
+        self._watchdog = None
         self.timeout = self._gettimeout()
+
+    @property
+    def watchdog(self):
+        if self._watchdog is None:
+            self._watchdog = self.open_handle()
+        return self._watchdog
+
+    def open_handle(self):
+        return os.open(self.watchdog_path, os.O_WRONLY)
+
+    def __del__(self):
+        """
+        Close watchdog
+        """
+
+        if self._watchdog is not None:
+            os.close(self._watchdog)
 
     def disarm(self):
         """
@@ -71,7 +85,6 @@ class WatchdogImplBase(WatchdogBase):
 
         try:
             self._disablewatchdog()
-            self.armed = False
             self.timeout = 0
         except IOError:
             return False
@@ -104,10 +117,8 @@ class WatchdogImplBase(WatchdogBase):
         @return watchdog timeout
         """
 
-        req = array.array('I', [0])
-        fcntl.ioctl(self.watchdog, WDIOC_GETTIMEOUT, req, True)
-
-        return int(req[0])
+        file_path = WD_SYSFS_PATH + 'timeout'
+        return utils.fread_int(file_path)
 
     def _gettimeleft(self):
         """
@@ -115,10 +126,8 @@ class WatchdogImplBase(WatchdogBase):
         @return time left in seconds
         """
 
-        req = array.array('I', [0])
-        fcntl.ioctl(self.watchdog, WDIOC_GETTIMELEFT, req, True)
-
-        return int(req[0])
+        file_path = WD_SYSFS_PATH + 'timeleft'
+        return utils.fread_int(file_path)
 
 
     def arm(self, seconds):
@@ -133,12 +142,10 @@ class WatchdogImplBase(WatchdogBase):
         try:
             if self.timeout != seconds:
                 self.timeout = self._settimeout(seconds)
-            if self.armed:
+            if self.is_armed():
                 self._keepalive()
             else:
-                sonic_logger.log_info(" Debug arm watchdog5 ")
                 self._enablewatchdog()
-                self.armed = True
             ret = self.timeout
         except IOError:
             pass
@@ -165,20 +172,13 @@ class WatchdogImplBase(WatchdogBase):
         Implements is_armed WatchdogBase API
         """
 
-        return self.armed
+        file_path = WD_SYSFS_PATH + 'state'
+        return utils.fread_str(file_path) == 'active'
 
     def get_remaining_time(self):
         """
         Implements get_remaining_time WatchdogBase API
         """
 
-        timeleft = WD_COMMON_ERROR
-
-        if self.armed:
-            try:
-                timeleft = self._gettimeleft()
-            except IOError:
-                pass
-
-        return timeleft
+        return self._gettimeleft()
 
