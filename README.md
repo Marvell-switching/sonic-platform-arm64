@@ -1,3 +1,3 @@
-# Sonic Platform Support - Marvell ARM64
+# Sonic Platform Support - Marvell Prestera
 
-SONiC platform monitoring implementation for Marvell ARM64 switching platforms.
+SONiC platform monitoring implementation for Marvell Prestera switching platforms.

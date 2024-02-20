@@ -10,6 +10,6 @@ setup(
    description='Module to initialize platforms',
 
    packages=['sonic_platform'],
-   package_dir={'sonic_platform': 'rd98dx35xx_cn9131/sonic_platform'},
+   package_dir={'sonic_platform': 'sonic_platform'},
 )
 
