@@ -138,6 +138,8 @@ class WatchdogImplBase(WatchdogBase):
         ret = WD_COMMON_ERROR
         if seconds < 0:
             return ret
+        if seconds > 340:
+            return ret
 
         try:
             if self.timeout != seconds:
