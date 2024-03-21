@@ -12,7 +12,7 @@ endif
 KERNEL_SRC :=  /lib/modules/$(KVERSION)
 INSTALL_MOD_DIR := kernel/extra/
 MOD_SRC_DIR:= $(shell pwd)
-MODULE_DIRS:= rd98dx35xx_cn9131 rd98dx35xx rd98dx35xx-x86 db98cx8580-32cd
+MODULE_DIRS:= rd98dx35xx_cn9131 rd98dx35xx rd98dx35xx-x86 db98cx8580-32cd db98cx8514-10cc db98cx8540-16cd
 UTILS_DIR := utils
 SERVICE_DIR := service
 MRVL_MODULE_DIR:= mrvl-modules
@@ -48,7 +48,11 @@ build:
 		elif [ $$mod = "rd98dx35xx" ]; then \
 			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVMBUS=y CONFIG_KM_MVINT=y || exit 1; \
 		elif [ $$mod = "db98cx8580-32cd" ]; then \
-			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVETH=y CONFIG_KM_MVDMA2=y || exit 1; \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
+		elif [ $$mod = "db98cx8514-10cc" ]; then \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
+		elif [ $$mod = "db98cx8540-16cd" ]; then \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
 		fi; \
 		cd $(MOD_SRC_DIR)/$${mod}; \
 		python3 setup.py build; \
@@ -78,8 +82,10 @@ binary-indep:
 		dh_installdirs -psonic-platform-$${pkg} /usr/local/bin; \
 		cp $(MOD_SRC_DIR)/$${mod}/$(UTILS_DIR)/* debian/sonic-platform-$${pkg}/usr/local/bin/; \
 		cp $(MOD_SRC_DIR)/$${mod}/$(MRVL_MODULE_DIR)/$(PRESTERA_MODULE_SRC)/mvcpss.ko debian/sonic-platform-$${pkg}/$(KERNEL_SRC)/$(INSTALL_MOD_DIR); \
-        if [ $$mod = "db98cx8580-32cd" ]; then \
-            cp $(MOD_SRC_DIR)/$${mod}/$(MRVL_MODULE_DIR)/mvSai.ko debian/sonic-platform-$${pkg}/$(KERNEL_SRC)/$(INSTALL_MOD_DIR); \
+        if [ $$mod = "db98cx8580-32cd" ] || \
+           [ $$mod = "db98cx8514-10cc" ] || \
+           [ $$mod = "db98cx8540-16cd" ]; then \
+            cp $(MOD_SRC_DIR)/$${mod}/$(MRVL_MODULE_DIR)/$(PRESTERA_MODULE_SRC)/mvSai.ko debian/sonic-platform-$${pkg}/$(KERNEL_SRC)/$(INSTALL_MOD_DIR); \
         fi; \
 		cd $(MOD_SRC_DIR)/$${mod}; \
 		python3 setup.py install --root=$(MOD_SRC_DIR)/debian/sonic-platform-$${pkg} --install-layout=deb; \
