@@ -181,6 +181,8 @@ class WatchdogImplBase(WatchdogBase):
         """
         Implements get_remaining_time WatchdogBase API
         """
-
-        return self._gettimeleft()
+        if self.is_armed():
+            return self._gettimeleft()
+        else:
+            return -1
 
