@@ -48,11 +48,11 @@ build:
 		elif [ $$mod = "rd98dx35xx" ]; then \
 			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVMBUS=y CONFIG_KM_MVINT=y || exit 1; \
 		elif [ $$mod = "db98cx8580-32cd" ]; then \
-			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y CONFIG_KM_MVETH=y || exit 1; \
 		elif [ $$mod = "db98cx8514-10cc" ]; then \
-			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y CONFIG_KM_MVETH=y || exit 1; \
 		elif [ $$mod = "db98cx8540-16cd" ]; then \
-			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y CONFIG_KM_MVETH=y || exit 1; \
 		fi; \
 		cd $(MOD_SRC_DIR)/$${mod}; \
 		python3 setup.py build; \
