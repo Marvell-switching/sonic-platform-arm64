@@ -64,6 +64,7 @@ profile_48x25G_8x100G = {
 sfputil_profiles = {
  "FC12_8T-DB":profile_12_8_db,
  "FC48x25G8x100GR4":profile_48x25G_8x100G,
+ "FALCON32x100G":profile_32x25G,
  "FALCON32X25G":profile_32x25G
 }
 
