@@ -17,8 +17,8 @@ rd98DX35xx_profile
 # Enumerate the SFP eeprom device on each mux channel
 echo optoe2 0x50 > /sys/bus/i2c/devices/i2c-0/new_device
 # Enumerate system eeprom
-echo 24c64 0x52 > /sys/class/i2c-adapter/i2c-0/new_device
+echo 24c64 0x52 > /sys/bus/i2c/devices/i2c-0/new_device
 sleep 2
-chmod 644 /sys/class/i2c-adapter/i2c-0/0-0052/eeprom
+chmod 644 /sys/bus/i2c/devices/i2c-0/0-0052/eeprom
 
 exit 0

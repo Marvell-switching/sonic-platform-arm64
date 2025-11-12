@@ -28,7 +28,7 @@ fan_eeprom_format = [
 
 class Eeprom(TlvInfoDecoder):
 
-    I2C_DIR = "/sys/class/i2c-adapter/"
+    I2C_DIR = "/sys/bus/i2c/devices/"
 
     def __init__(self, is_psu=False, psu_index=0, is_fan=False, fan_index=0):
         self.is_psu_eeprom = is_psu
@@ -47,15 +47,15 @@ class Eeprom(TlvInfoDecoder):
                 self.index = psu_index
                 self.start_offset = 6
                 self.eeprom_path = self.I2C_DIR \
-                   + "i2c-3{0}/3{0}-0056/eeprom".format(self.index - 1)
+                   + "3{0}-0056/eeprom".format(self.index - 1)
                 self.eeprom_path = self.I2C_DIR \
-                    + "i2c-0/0-005{}/eeprom".format(2 - self.index)
+                    + "0-005{}/eeprom".format(2 - self.index)
                 self.format = psu_eeprom_format
             else:
                 self.index = fan_index
                 self.start_offset = 13
                 self.eeprom_path = self.I2C_DIR \
-                    + "i2c-4{0}/4{0}-0050/eeprom".format(self.index - 1)
+                    + "4{0}-0050/eeprom".format(self.index - 1)
                 self.format = fan_eeprom_format
             EepromDecoder.__init__(self, self.eeprom_path, self.format,
                                    self.start_offset, '', True)
