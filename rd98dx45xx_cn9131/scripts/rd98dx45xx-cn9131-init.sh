@@ -12,4 +12,7 @@ rd98dx45xx-cn9131_profile()
 # - Main entry
 rd98dx45xx-cn9131_profile
 
+# Dummy platform.json to eliminate "systemd-sonic-generator: Failed to open"
+echo "{ }" > /usr/share/sonic/device/arm64-marvell_rd98DX45xx_cn9131-r0/platform.json
+
 exit 0
