@@ -18,4 +18,9 @@ echo optoe2 0x50 > /sys/bus/i2c/devices/i2c-2/new_device
 # Disable BIOS ACPI interrupt
 echo disable > /sys/firmware/acpi/interrupts/gpe01
 
+# Remove Kontron kempld modules (causing starvation on i2c bus)
+rmmod i2c_kempld || true
+rmmod gpio_kempld || true
+rmmod kempld_core || true
+
 exit 0
