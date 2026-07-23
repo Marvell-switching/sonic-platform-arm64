@@ -51,11 +51,11 @@ override_dh_auto_build:
 		cd $(MOD_SRC_DIR)/$${mod}/$(MRVL_MODULE_DIR)/$(PRESTERA_MODULE_SRC); \
 		make clean; \
 		if [ $$mod = "rd98dx35xx_cn9131" ]; then \
-			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y || exit 1; \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
 		elif [ $$mod = "db98dx73xx_cn9131" ]; then \
-			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y || exit 1; \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
 		elif [ $$mod = "rd98dx45xx_cn9131" ]; then \
-			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y || exit 1; \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y || exit 1; \
         elif [ $$mod = "rd98dx35xx-x86" ];then \
 			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y CONFIG_KM_MVDMA2=y|| exit 1; \
 		elif [ $$mod = "rd98dx35xx" ]; then \
