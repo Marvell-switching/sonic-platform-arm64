@@ -1,0 +1,12 @@
+#!/bin/sh
+# postinst script for sonic-platform-db98dx73xx-cn9131
+#
+# see: dh_installdeb(1)
+
+chmod a+x /usr/local/bin/db98dx73xx-cn9131-init.sh
+depmod -a
+systemctl restart kmod
+systemctl enable db98dx73xx-cn9131-init.service
+systemctl start db98dx73xx-cn9131-init.service
+exit 0
+

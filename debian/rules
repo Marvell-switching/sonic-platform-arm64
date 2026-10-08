@@ -12,7 +12,7 @@ endif
 KERNEL_SRC :=  /lib/modules/$(KVERSION)
 INSTALL_MOD_DIR := kernel/extra/
 MOD_SRC_DIR:= $(shell pwd)
-MODULE_DIRS:= rd98dx35xx_cn9131 rd98dx35xx rd98dx35xx-x86 db98cx8580-32cd db98cx8514-10cc db98cx8540-16cd db98cx8522-10cc rd98dx45xx_cn9131
+MODULE_DIRS:= rd98dx35xx_cn9131 rd98dx35xx rd98dx35xx-x86 db98cx8580-32cd db98cx8514-10cc db98cx8540-16cd db98cx8522-10cc rd98dx45xx_cn9131 db98dx73xx_cn9131
 UTILS_DIR := utils
 SERVICE_DIR := service
 MRVL_MODULE_DIR:= mrvl-modules
@@ -43,6 +43,7 @@ override_dh_auto_configure:
 		fi; \
 	done)
 
+# Each device is built into own .DEB-package including own .KO instance
 override_dh_auto_build:
 	(set -e; for mod in $(MODULE_DIRS); do \
 		mkdir -p $(MOD_SRC_DIR)/$${mod}/$(MRVL_MODULE_DIR); \
@@ -50,6 +51,8 @@ override_dh_auto_build:
 		cd $(MOD_SRC_DIR)/$${mod}/$(MRVL_MODULE_DIR)/$(PRESTERA_MODULE_SRC); \
 		make clean; \
 		if [ $$mod = "rd98dx35xx_cn9131" ]; then \
+			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y || exit 1; \
+		elif [ $$mod = "db98dx73xx_cn9131" ]; then \
 			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y || exit 1; \
 		elif [ $$mod = "rd98dx45xx_cn9131" ]; then \
 			make modules -C $(KERNEL_SRC)/build M=`pwd` CONFIG_KM_MVPCI=y CONFIG_KM_MVINT=y || exit 1; \
@@ -82,6 +85,8 @@ override_dh_auto_install:
 	(set -e; for mod in $(MODULE_DIRS); do \
 		if [ $$mod = "rd98dx35xx_cn9131" ]; then \
 			pkg="rd98dx35xx-cn9131"; \
+		elif [ $$mod = "db98dx73xx_cn9131" ]; then \
+			pkg="db98dx73xx-cn9131"; \
 		elif [ $$mod = "rd98dx45xx_cn9131" ]; then \
 			pkg="rd98dx45xx-cn9131"; \
 		else \
